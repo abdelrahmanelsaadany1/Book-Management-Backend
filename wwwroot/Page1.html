@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Load Book</title>
+  </head>
+  <body>
+    <h1>internal consumer</h1>
+    <input type="text" id="BookId" placeholder="Enter Book ID" />
+    <input type="button" onclick="LoadData()" value="Load Book" />
+    <div id="div1"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+      function LoadData() {
+        var bookId = document.getElementById("BookId").value;
+        var divElement = document.getElementById("div1");
+
+        $.ajax({
+          url: "https://localhost:7204/api/Books/" + bookId,
+          method: "GET",
+          success: function (result) {
+            var html = `
+                            <p><strong>Title:</strong> ${result.title}</p>
+                            <p><strong>Author:</strong> ${result.author}</p>
+                            <p><strong>Genre:</strong> ${result.genre}</p>
+                            <p><strong>Published:</strong> ${new Date(
+                              result.publishedDate
+                            ).toLocaleDateString()}</p>
+                            <p><strong>Available:</strong> ${
+                              result.isAvailable ? "Yes" : "No"
+                            }</p>
+                        `;
+            divElement.innerHTML = html;
+          },
+          error: function () {
+            divElement.innerHTML =
+              "<p style='color:red;'>Book not found or server error.</p>";
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
